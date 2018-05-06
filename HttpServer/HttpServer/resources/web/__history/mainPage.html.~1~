@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html' charset='UTF-8' />
+    <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+    <style>
+        div.container {
+            width: 100%;
+            height: 100%;
+            border: 1px solid gray;
+        }
+        header {
+            padding: 1px;
+            color: white;
+            background-color: black;
+            clear: left;
+            text-align: left;
+        }
+        nav {
+            color: black;
+            background-color: white;
+            border-bottom: 1px solid gray;
+            clear: left;
+            text-align: center;
+        }
+        section {
+            border: 1px solid gray;
+        }
+        aside {
+            display: block;
+        }
+        footer {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1px;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+        th {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        iframe {
+            background-color: black;
+            align: right;
+        }
+        #map_canvas {
+            height: 460px;
+        }
+        #titleMap {
+            padding: 10px;
+        }
+        #titleLocation {
+            padding: 10px;
+        }
+    </style>
+
+    <script type='text/javascript' src='http://maps.googleapis.com/maps/api/js?key=AIzaSyBng4haedS3slr78L2a2ouEHSbG-wm0hnk&sensor=false'></script>
+    <script type='text/javascript'>
+        var map, marker;
+        var lat, lng, newLat, newLng;
+        var xhttpcontrol, xhttplocation, xhttpStream, locationmsg, msgControl, msgControlResponse;
+        var timer, timerControl;
+
+        var isStreamming = false;
+        var isGpsOn;
+        var isPinLevelOn;
+
+        xhttpcontrol = new XMLHttpRequest();
+        xhttplocation = new XMLHttpRequest();
+        xhttpStream = new XMLHttpRequest();
+
+        function onClickMove(name) {
+            xhttpcontrol.open('POST', '', true);
+            xhttpcontrol.send(name);
+        }
+
+        function getLocation() {
+            xhttplocation.open('POST', '', true);
+            xhttplocation.onreadystatechange = callBack;
+            xhttplocation.send('updatestatus');
+        }
+
+        function callBack() {
+            if (this.readyState == 4 && this.status == 200) {
+                locationmsg = this.responseText;
+                document.getElementById('lblRevData').innerHTML = 'Dữ Liệu Nhận Từ Pi: ' + locationmsg;
+                var res = locationmsg.split(':');
+                newLat = res[1];
+                newLng = res[3];
+                if (newLat != lat || newLng != lng) {
+                    lat = newLat;
+                    lng = newLng;
+                    document.getElementById('lblReceive').innerHTML = 'lat: ' + lat + ', lon: ' + lng;
+                    setLocation(lat, lng);
+                }
+
+            }
+        }
+
+        function onClickStream() {
+            xhttpStream.open('POST', '', true);
+            xhttpStream.send('Send ' + isStreamming);
+
+            if (isStreamming) {
+                isStreamming = false;
+                xhttpStream.open('POST', '', true);
+                xhttpStream.send('stopstream');
+                document.getElementById('btnStream').innerHTML = 'Start Streamming';
+                document.getElementById('framestreamvideo').src = '';
+            } else if (!isStreamming) {
+                isStreamming = true;
+                xhttpStream.open('POST', '', true);
+                xhttpStream.send('startstream');
+                document.getElementById('btnStream').innerHTML = 'Stop Streamming';
+                document.getElementById('framestreamvideo').src = 'http://192.168.5.235:9000/javascript_simple.html';
+            } else {}
+        }
+
+        function startTimerGetLocation() {
+            timer = setInterval(getLocation, 2000);
+        }
+
+        function clearTimerGetLocation() {
+            clearInterval(timer);
+            clearInterval(timerControl);
+        }
+
+        function initialize() {
+            var myOptions = {
+                center: new google.maps.LatLng(21.0070566, 105.840707),
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                panControl: true
+            };
+            map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+        }
+
+        function setLocation(_lat, _lng) {
+            map.setZoom(14);
+            map.panTo(new google.maps.LatLng(_lat, _lng));
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(_lat, _lng)
+            });
+            marker.setMap(map);
+        }
+
+        function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+    </script>
+</head>
+
+<title>Hệ Thống Ðiều Khiển Qua Mạng</title>
+
+<body onload='initialize()'>
+    <div class='container'>
+        <header><font size='4'><b>Truờng Ðại Học Bách Khoa Hà Nội</b></font>
+        </header>
+        <nav>
+            <h2>Hệ Thống Ðiều Khiển Robot Từ Xa</h2>
+        </nav>
+
+        <table width='100%' height='100%'>
+            <tr class='tr_top' width="100%" height='100%' align='top'>
+                <td class='td_top1' width='60%'>
+                    <table class='video_control' width='100%'>
+                        <tr class='video'>
+                            <td colspan='2'>
+                                <iframe id='framestreamvideo' width='70%' frameborder='1' align='top'></iframe>
+                                <td>
+                        </tr>
+                        <tr class='start_stream'>
+                            <td>
+                                <button id='btnStream' onclick='onClickStream()'>Start Streamming</button>
+                                </br>
+                                <label id='lblRevData'>Dữ Liệu Nhận Từ Pi: </label>
+                            </td>
+                        </tr>
+                        <tr class='control'>
+                            <td class='move_control'>
+                                <table>
+                                    <tr width="100%" bgcolor="#4255BF">
+                                        <td colspan='3'>
+                                            Ðiều Khiển Motor
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="#b5dcb3"></td>
+                                        <td>
+                                            <center>
+                                                <button id='moveforward' onmousedown='onClickMove("moveforward")' onmouseup='onClickMove("movenospeed")'>Tiến</button>
+                                            </center>
+                                        </td>
+                                        <td bgcolor="#b5dcb3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <button id='moveleft' onmousedown='onClickMove("moveleft")' onmouseup='onClickMove("movenospeed")'>Trái</button>
+                                            </center>
+                                        </td>
+                                        <td bgcolor="#b5dcb3"></td>
+                                        <td>
+                                            <center>
+                                                <button id='moveright' onmousedown='onClickMove("moveright")' onmouseup='onClickMove("movenospeed")'>Phải</button>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="#b5dcb3"></td>
+                                        <td>
+                                            <center>
+                                                <button id='movebackward' onmousedown='onClickMove("movebackward")' onmouseup='onClickMove("movenospeed")'>Lùi</button>
+                                            </center>
+                                        </td>
+                                        <td bgcolor="#b5dcb3"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class='camera'>
+                                <table>
+                                    <tr width="100%" bgcolor="#4255BF">
+                                        <td colspan='3'>Ðiều Khiển Camera</td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="#b5dcb3"></td>
+                                        <td>
+                                            <center>
+                                                <button id='camup' onmousedown='onClickMove("camup")' onmouseup='onClickMove("camnospeed")'>Lên</button>
+                                            </center>
+                                        </td>
+                                        <td bgcolor="#b5dcb3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <button id='camleft' onmousedown='onClickMove("camleft")' onmouseup='onClickMove("camnospeed")'>Trái</button>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <button id='camcenter' onclick='onClickMove("camcenter")'>Giữa</button>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <button id='camright' onmousedown='onClickMove("camright")' onmouseup='onClickMove("camnospeed")'>Phải</button>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="#b5dcb3"></td>
+                                        <td>
+                                            <center>
+                                                <button id='camdown' onmousedown='onClickMove("camdown")' onmouseup='onClickMove("camnospeed")'>Xuống</button>
+                                            </center>
+                                        </td>
+                                        <td bgcolor="#b5dcb3"></td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                    </td>
+                    <td class='td_top2' width="40%">
+                        <table class='gmap' width='100%'>
+                            <tr width='100%'>
+                                <td width='100%'>
+                                    <b id='titleMap'>Bản Ðồ</b>
+                                    <button onclick='startTimerGetLocation()'>Lấy tọa độ</button>
+                                    <button onclick='clearTimerGetLocation()'>Ngưng lấy tọa độ</button>
+                                    <button onclick='map.panTo(new google.maps.LatLng(21.0070566, 105.840707));'>Vị trí hiện tại</button>
+                                    <b>Vị Trí Nhận Ðược:</b>
+                                    <label id='lblReceive'></label>
+                                    </br>
+                                    <b id='titleLocation'>Ði Tới: </b>
+                                    <b>Vi Ðộ:</b>
+                                    <input type='text' id='lat'></input>
+                                    <b>Kinh Ðộ:</b>
+                                    <input type='text' id='lon'></input>
+                                    <button onclick="if(document.getElementById('lat').value != '' && document.getElementById('lon').value != '') setLocation(document.getElementById('lat').value, document.getElementById('lon').value);">Thực Hiện</button>
+                                    <div id='map_canvas'></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+            </tr>
+        </table>
+
+        <footer>Copyright © Vượng Nguyễn - K57 ÐHBKHN</footer>
+    </div>
+</body>
+
+</html>

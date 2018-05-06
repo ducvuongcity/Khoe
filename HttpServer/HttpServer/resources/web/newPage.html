@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta http-equiv='Content-Type' content='text/html'; charset='UTF-8'/>
+            <meta name='viewport' content='initial-scale=1.0, user-scalable=no' />
+            <style>
+                div.container {
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid gray;
+                }
+
+                header {
+                    padding: 1px;
+                    color: white;
+                    background-color: black;
+                    clear: left;
+                    text-align: left;
+                }
+
+                nav{
+                    color: black;
+                    background-color: white;
+                    border-bottom: 1px solid gray;
+                    clear: left;
+                    text-align: center;
+                }
+
+                footer {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    padding: 1px;
+                    background-color: black;
+                    color: white;
+                    text-align: center;
+                }
+
+                section{
+                    float: left;
+                    width: 40%;
+                    padding: 1em;
+                }
+
+                aside{
+                    padding: 5px;
+                    border-left: 1px solid gray;
+                    overflow: hidden;
+                }
+
+                #framestreamvideo{
+                    background-color: black;
+                    width: 100%;
+                    height: 320px;
+                }
+
+                #map_canvas{
+                    height: 460px;
+                }
+
+                #titleMap{
+                    padding: 10px;
+                }
+
+                #titleLocation{
+                    padding: 10px;
+                }
+
+            </style>
+
+            <script type='text/javascript' src='http://maps.googleapis.com/maps/api/js?key=AIzaSyBng4haedS3slr78L2a2ouEHSbG-wm0hnk&sensor=false'></script>
+            <script type='text/javascript'>
+                var map, marker;
+                var lat, lng, newLat, newLng;
+                var xhttpcontrol, xhttplocation, xhttpStream, locationmsg;
+                var timer;
+				
+                var isStreamming = false;
+                var isGpsOn;
+                var isPinLevelOn;
+
+                xhttpcontrol = new XMLHttpRequest();
+                xhttplocation = new XMLHttpRequest();
+                xhttpStream = new XMLHttpRequest();
+
+                function onClickControlButton(name) {
+                    xhttpcontrol.open('POST', '', true);
+                    var btn = document.getElementById(name);
+                    xhttpcontrol.send(name);
+                }
+
+                function getLocation() {
+                    xhttplocation.open('POST', '', true);
+                    xhttplocation.onreadystatechange = callBack;
+                    xhttplocation.send('location?');
+                }
+
+                function callBack() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        locationmsg = this.responseText;
+                        document.getElementById('lblRevData').innerHTML = 'Dữ Liệu Nhận Từ Pi: ' + locationmsg;
+                        var res = locationmsg.split(':');
+                        newLat=res[1];
+                        newLng=res[3];
+                        if(newLat != lat || newLng != lng)
+                        {
+                            lat = newLat;
+                            lng = newLng;
+                            document.getElementById('lblReceive').innerHTML = 'lat: ' + lat + ', lon: ' + lng;
+                            setLocation(lat, lng);
+                        }
+
+                    }
+                }
+
+                function onClickStream() {
+                    xhttpStream.open('POST', '', true);
+                    xhttpStream.send('Send ' + isStreamming);
+
+                    if(isStreamming) {
+                        isStreamming = false;
+                        xhttpStream.open('POST', '', true);
+                        xhttpStream.send('stopstream');
+                        document.getElementById('btnStream').innerHTML = 'Start Streamming';
+                        document.getElementById('framestreamvideo').src = '';
+                    }
+                    else if(!isStreamming) {
+                        isStreamming = true;
+                        xhttpStream.open('POST', '', true);
+                        xhttpStream.send('startstream');
+                        document.getElementById('btnStream').innerHTML = 'Stop Streamming';
+                        document.getElementById('framestreamvideo').src = 'E:/vvv/Entertainment/Video/Ghibli/[LinksVIP.Net] The.Wind.Rises.2013.DVDSCR.XviD.HORiZON.mkv';
+                    }
+					else{}
+                }
+
+                function startTimerGetLocation() {
+                    timer = setInterval(getLocation, 2000);
+                }
+
+                function clearTimerGetLocation() {
+                    clearInterval(timer);
+                }
+
+                function initialize() {
+                    var myOptions = {
+                        center: new google.maps.LatLng(21.0070566, 105.840707),
+                        zoom: 14,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        panControl: true
+                    };
+                    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+                }
+
+                function setLocation(_lat, _lng) {
+                    map.setZoom(14);
+                    map.panTo(new google.maps.LatLng(_lat, _lng));
+                    marker = new google.maps.Marker({position:new google.maps.LatLng(_lat, _lng)});
+                    marker.setMap(map);
+                }
+                function resizeIframe(obj) {
+                    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+                }
+
+            </script>
+        </head>
+
+        <title>Hệ Thống Điều Khiển Qua Mạng</title>
+
+        <body onload='initialize()'>
+            <div class='container'>
+                <header>
+                    <b>Trường Đại Học Bách Khoa Hà Nội</b>
+                </header>
+
+                <nav>
+                    <h2>Hệ Thống Điều Khiển Từ Xa Qua Internet</h2>
+                </nav>
+
+                <section>
+                    <iframe id='framestreamvideo' src='E:/vvv/Entertainment/Video/Ghibli/Bên kia đám mây, nơi ta hẹn ước - Kumo no Mukō, Yakusoku no Basho - YouTube.mp4' align='center' width='320' height='240' frameborder='0' scrolling='yes' onload='resizeIframe(this)' ></iframe>
+
+                    <button id='btnStream' onclick='onClickStream()'>Start Streamming</button>
+                    <label id='lblRevData'>Dữ Liệu Nhận Từ Pi: </label>
+
+                    <h4>Điều Khiển Motor</h4>
+                    <button id='moveforward' onclick='onClickControlButton("moveforward")'>Tiến</button>
+                    <button id='movebackward' onclick='onClickControlButton("movebackward")'>Lùi</button>
+                    <button id='moveleft' onclick='onClickControlButton("moveleft")'>Trái</button>
+                    <button id='moveright' onclick='onClickControlButton("moveright")'>Phải</button>
+
+                    <h4>Điều Khiển Camera</h4>
+                    <button id='camup' onclick='onClickControlButton("camup")'>Lên</button>
+                    <button id='camdown' onclick='onClickControlButton("camdown")'>Xuống</button>
+                    <button id='camcenter' onclick='onClickControlButton("camcenter")'>Giữa</button>
+                    <button id='camleft' onclick='onClickControlButton("camleft")'>Trái</button>
+                    <button id='camright' onclick='onClickControlButton("camright")'>Phải</button>
+                </section>
+
+                <aside>
+                    <b id='titleMap'>Bản Đồ</b>
+                    <button onclick='startTimerGetLocation()'>Lấy tọa độ</button>
+                    <button onclick='clearTimerGetLocation()'>Ngưng lấy tọa độ</button>
+                    <button onclick='map.panTo(new google.maps.LatLng(21.0070566, 105.840707));'>Vị trí hiện tại</button>
+                    <b>Vị Trí Nhận Được:</b>
+                    <label id='lblReceive'></label> </br>
+                    <b id='titleLocation'>Đi Tới: </b>
+                    <b>Vĩ Độ:</b>
+                    <input type='text' id='lat'></input>
+                    <b>Kinh Độ:</b>
+                    <input type='text' id='lon'></input>
+                    <button onclick="if(document.getElementById('lat').value != '' && document.getElementById('lon').value != '') setLocation(document.getElementById('lat').value, document.getElementById('lon').value);">Thực Hiện</button>
+                    <div id='map_canvas'></div>
+                </aside>
+
+                <footer>Copyright © Vượng Nguyễn - K57 ĐHBKHN</footer>
+            </div>
+
+    </body>
+    </html>
