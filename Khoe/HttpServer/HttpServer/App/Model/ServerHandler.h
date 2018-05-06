@@ -7,12 +7,13 @@
 #include <QThread>
 #include <QRegExp>
 
-#include "parameter.h"
+#include "common.h"
 #include "DataManager.h"
 
 class ServerHandler : public QObject
 {
     Q_OBJECT
+
 public:
     explicit ServerHandler(QObject *parent = nullptr);
 

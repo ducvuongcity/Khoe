@@ -4,8 +4,8 @@ DataManager *DataManager::m_instance = nullptr;
 
 DataManager::DataManager(QObject *parent)
     : QObject(parent)
-    , m_lat(0)
-    , m_lng(0)
+    , m_lat(DEFAULT_LAT)
+    , m_lng(DEFAULT_LNG)
     , m_temp(0)
     , m_humi(0)
 {}
@@ -24,7 +24,8 @@ double DataManager::temp() const
 
 void DataManager::setTemp(double temp)
 {
-    m_temp = temp;
+    if(m_temp != temp)
+        m_temp = temp;
 }
 
 double DataManager::humi() const
@@ -34,7 +35,8 @@ double DataManager::humi() const
 
 void DataManager::setHumi(double humi)
 {
-    m_humi = humi;
+    if(m_humi != humi)
+        m_humi = humi;
 }
 
 double DataManager::lat() const
@@ -44,7 +46,8 @@ double DataManager::lat() const
 
 void DataManager::setLat(double lat)
 {
-    m_lat = lat;
+    if(m_lat != lat)
+        m_lat = lat;
 }
 
 double DataManager::lng() const
@@ -54,6 +57,7 @@ double DataManager::lng() const
 
 void DataManager::setLng(double lng)
 {
-    m_lng = lng;
+    if(m_lng != lng)
+        m_lng = lng;
 }
 

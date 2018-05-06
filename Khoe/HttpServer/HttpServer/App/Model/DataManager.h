@@ -2,10 +2,12 @@
 #define DATAMANAGER_H
 
 #include <QObject>
+#include "common.h"
 
 class DataManager : public QObject
 {
     Q_OBJECT
+
 public:
     explicit DataManager(QObject *parent = nullptr);
     static DataManager* getInstance();

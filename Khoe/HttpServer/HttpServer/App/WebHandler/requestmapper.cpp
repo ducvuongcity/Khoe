@@ -1,4 +1,4 @@
-#include "requestmapper.h"
+#include "RequestMapper.h"
 
 HttpSessionStore* RequestMapper::sessionStore=0;
 
@@ -20,16 +20,13 @@ void RequestMapper::service(HttpRequest& request, HttpResponse& response) {
 
     if (path=="/") {
         if(msgBody == "") {
-            mainPageController.sendHTML(response);
+            m_mainPageHandler.sendHTML(response);
+        } else {
+            m_mainPageHandler.service(request, response);
         }
-        else
-            mainPageController.service(request, response);
-    }
-    else {
+    } else {
         response.setStatus(404,"Not found");
         response.write("The URL is wrong, no such document.");
     }
-
-    //qDebug("RequestMapper: finished request");
 }
 

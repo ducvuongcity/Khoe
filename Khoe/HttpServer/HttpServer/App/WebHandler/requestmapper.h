@@ -1,16 +1,16 @@
 #ifndef REQUESTMAPPER_H
 #define REQUESTMAPPER_H
 
-#include <QProcess>
-
 #include "httprequesthandler.h"
 #include "httpsessionstore.h"
-#include "mainpagecontroller.h"
+#include "MainPageHandler.h"
 
 #include "ServerHandler.h"
 
-class RequestMapper : public HttpRequestHandler {
+class RequestMapper : public HttpRequestHandler
+{
     Q_OBJECT
+
 public:
     RequestMapper(QObject* parent=0);
     ~RequestMapper();
@@ -18,7 +18,7 @@ public:
     static HttpSessionStore* sessionStore;
 
 private:
-    MainPageController mainPageController;
+    MainPageHandler m_mainPageHandler;
     ServerHandlerThread m_serverHandler;
 };
 

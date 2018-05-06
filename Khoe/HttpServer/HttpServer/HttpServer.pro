@@ -18,15 +18,15 @@ INCLUDEPATH += \
 
 SOURCES += \
     App/main.cpp \
-    App/WebHandler/requestmapper.cpp \
-    App/WebHandler/mainpagecontroller.cpp \
+    App/WebHandler/RequestMapper.cpp \
+    App/WebHandler/MainPageHandler.cpp \
     App/Model/DataManager.cpp \
     App/Model/ServerHandler.cpp
 
 HEADERS += \
-    App/WebHandler/requestmapper.h \
-    App/WebHandler/mainpagecontroller.h \
-    App/constant/parameter.h \
+    App/WebHandler/RequestMapper.h \
+    App/WebHandler/MainPageHandler.h \
+    App/constant/common.h \
     App/Model/DataManager.h \
     App/Model/ServerHandler.h
 
