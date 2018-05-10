@@ -19,7 +19,7 @@ void MainPageHandler::service(HttpRequest &request, HttpResponse &response)
     QString updateMsg;
 
     if(msgBody.contains("update")) {
-        DLG_THR << "Request update";
+//        DLG_THR << "Request update";
         updateMsg = QString("msg_update,%1,%2,%3,%4")
                 .arg(MODEL->lat())
                 .arg(MODEL->lng())

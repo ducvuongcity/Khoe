@@ -13,8 +13,10 @@
 
 #define MODEL               DataManager::getInstance()
 
-#define DEFAULT_LNG         105     //kinh độ
-#define DEFAULT_LAT         21      //vĩ độ
+#define DEFAULT_LNG         105.8431605     //kinh độ
+#define DEFAULT_LAT         21.0065189      //vĩ độ
+#define DEFAULT_TEMP        32     //kinh độ
+#define DEFAULT_HUMI        84      //vĩ độ
 
 #endif // PARAMETER
 

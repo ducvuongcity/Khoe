@@ -4,10 +4,10 @@ DataManager *DataManager::m_instance = nullptr;
 
 DataManager::DataManager(QObject *parent)
     : QObject(parent)
+    , m_temp(DEFAULT_TEMP)
+    , m_humi(DEFAULT_HUMI)
     , m_lat(DEFAULT_LAT)
     , m_lng(DEFAULT_LNG)
-    , m_temp(0)
-    , m_humi(0)
 {}
 
 DataManager* DataManager::getInstance()
