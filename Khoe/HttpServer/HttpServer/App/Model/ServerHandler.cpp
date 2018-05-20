@@ -3,6 +3,7 @@
 ServerHandler::ServerHandler(QObject *parent)
     : QObject(parent)
 {
+    MODEL;
     m_server = new QTcpServer(this);
     connect(m_server, SIGNAL(newConnection()), this, SLOT(newConnectionHandler()));
     m_server->listen(QHostAddress::Any, 10101);
@@ -21,8 +22,18 @@ void ServerHandler::readClientMessage()
     DLG_THR << "Client send: " << revMessage;
     QRegExp rx("(\\[|\\]|\\,)");
     QStringList elements = revMessage.split(rx);
-    MODEL->setLat(elements.at(2).toDouble());
-    MODEL->setLng(elements.at(5).toDouble());
-    MODEL->setTemp(elements.at(8).toDouble());
-    MODEL->setHumi(elements.at(11).toDouble());
+    MODEL->setLat(elements.at(2));
+    MODEL->setLng(elements.at(5));
+    MODEL->setTemp(elements.at(8));
+    MODEL->setHumi(elements.at(11));
+    MODEL->setRain(elements.at(14).toInt() == 0);
+    MODEL->setDust(elements.at(17));
+
+    MODEL->addHistoryDataRow(QDateTime::currentDateTime().toString("HH:mm:ss dd-MM-yyyy")
+                             , MODEL->lat()
+                             , MODEL->lng()
+                             , MODEL->temp()
+                             , MODEL->humi()
+                             , MODEL->rain()
+                             , MODEL->dust());
 }

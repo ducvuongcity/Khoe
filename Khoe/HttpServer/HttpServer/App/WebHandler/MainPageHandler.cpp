@@ -19,12 +19,13 @@ void MainPageHandler::service(HttpRequest &request, HttpResponse &response)
     QString updateMsg;
 
     if(msgBody.contains("update")) {
-//        DLG_THR << "Request update";
-        updateMsg = QString("msg_update,%1,%2,%3,%4")
+        updateMsg = QString("msg_update,%1,%2,%3,%4,%5,%6")
                 .arg(MODEL->lat())
                 .arg(MODEL->lng())
                 .arg(MODEL->temp())
-                .arg(MODEL->humi());
+                .arg(MODEL->humi())
+                .arg(MODEL->rain())
+                .arg(MODEL->dust());
 
         response.flush();
         response.write(QByteArray::fromStdString(updateMsg.toStdString()));
@@ -32,7 +33,6 @@ void MainPageHandler::service(HttpRequest &request, HttpResponse &response)
     else {
         DLG << "Rev: " + msgBody;
     }
-
 }
 
 void MainPageHandler::sendHTML(HttpResponse &response)

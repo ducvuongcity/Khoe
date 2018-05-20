@@ -1,7 +1,5 @@
-QT  += core
 QT  -= gui
-QT  += network
-QT  += serialport
+QT  += core network serialport sql
 
 TARGET = HttpServer
 

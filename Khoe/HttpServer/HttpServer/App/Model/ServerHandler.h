@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QThread>
 #include <QRegExp>
+#include <QDateTime>
 
 #include "common.h"
 #include "DataManager.h"
