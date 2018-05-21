@@ -34,12 +34,6 @@
          clear: left;
          text-align: center;
          }
-         section {
-         border: 1px solid gray;
-         }
-         aside {
-         display: block;
-         }
          footer {
          position: fixed;
          right: 0;
@@ -75,30 +69,9 @@
          #map_canvas {
          height: 500px;
          }
-         #titleMap {
-         padding: 10px;
-         }
-         #titleLocation {
-         padding: 10px;
-         }
-         #btnStream {
-         background-color: Transparent;
-         background-repeat:no-repeat;
-         border: none;
-         cursor:pointer;
-         overflow: hidden;
-         outline:none;
-         }
-         #imgStream {
-         width: 40%;
-         height: auto;
-         }
          .tblGPS {
          width:100%;
          border-collapse: collapse;
-         }
-         .tblControl {
-         margin: 2px;
          }
          .gpsText {
          width: 98%;
@@ -147,22 +120,22 @@
       </style>
       <script type='text/javascript' src='http://maps.googleapis.com/maps/api/js?key=AIzaSyBng4haedS3slr78L2a2ouEHSbG-wm0hnk&sensor=false'></script>
       <script type='text/javascript'>
-        var map, infowindow, current;
-        var xhttplocation = new XMLHttpRequest();
-        var timer, locationmsg;
+        var map, infowindow, currentMarkerIndex, delayConnectionText = 0;
+        var xhttpRequest = new XMLHttpRequest();
+        var timer, msgResponse;
 
         var centerLat = 21.0065189;
         var centerLng = 105.8431605;
         var zoomVal = 14;
 
-        var m_Lat, m_Lng, m_Temp, m_Humi, m_Rain, m_Dust;
-        var fixedMarker, fixedInfowindow;
+        var m_Lat = 'N/A', m_Lng = 'N/A', m_Temp = 'N/A', m_Humi = 'N/A', m_Rain = 'N/A', m_Dust = 'N/A';
+        var markers;
         var stationLocation = [
-        ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust],
-        ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82],
-        ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73],
-        ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56],
-        ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56]
+            ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust],
+            ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82],
+            ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73],
+            ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56],
+            ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56]
         ];
          
         function initMap() {
@@ -176,16 +149,18 @@
         }
 
         function getLocation() {
-            xhttplocation.open('POST', '', true);
-            xhttplocation.onreadystatechange = callBack;
-            xhttplocation.send('update');
+            xhttpRequest.open('POST', '', true);
+            xhttpRequest.timeout = 2000;
+            xhttpRequest.onreadystatechange = callBack;
+            xhttpRequest.send('update');
         }
          
         function callBack() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById('lblConnectStatus').innerHTML = 'Đã Kết Nối: ' + current;
-                locationmsg = this.responseText;
-                var elements = locationmsg.split(',');
+                delayConnectionText = 0;
+                document.getElementById('lblConnectStatus').innerHTML = 'Đã Kết Nối: ';
+                msgResponse = this.responseText;
+                var elements = msgResponse.split(',');
                 m_Lat = elements[1];
                 m_Lng = elements[2];
                 m_Temp = elements[3];
@@ -195,12 +170,14 @@
                 stationLocation[0] = ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust];
                 updateStatus();
              } else {
-                document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
+                if(delayConnectionText++ == 1) {
+                    document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
+                }
              }
         }
 
-        function updateStatus(){
-            if(current == 0) {
+        function updateStatus() {
+            if(currentMarkerIndex == 0) {
                 if(m_Temp != "-1") document.getElementById('txtTemp').value = m_Temp + '°C';
                 else document.getElementById('txtTemp').value = "N/A";
 
@@ -215,8 +192,12 @@
 
                 document.getElementById('txtRain').value = m_Rain == 1 ? "Đang mưa" : "Không mưa";
 
-                if(m_Dust != "-1") document.getElementById('txtDust').value = m_Dust + 'µg/m3';
+                if(m_Dust != "-1") document.getElementById('txtDust').value = m_Dust + ' µg/m3';
                 else document.getElementById('txtDust').value = "N/A";
+
+                if(isInfoWindowOpen(infowindow)) {
+                    refreshInfoWindowContent(0);
+                }
             }
          }
          
@@ -230,34 +211,49 @@
          
          function initialize() {
              infowindow = new google.maps.InfoWindow();
-             initFixedMarker();
+             initMarkers();
              dumyCode();
          }
          
          function dumyCode() {
+            document.getElementById('txtStation').value = "N/A";
             document.getElementById('txtLng').value = "N/A";
             document.getElementById('txtLat').value = "N/A";
             document.getElementById('txtTemp').value = "N/A";
             document.getElementById('txtHumi').value = "N/A";
             document.getElementById('txtRain').value = 'N/A';
             document.getElementById('txtDust').value = 'N/A';
-            startTimerGetLocation();
+            document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
          }
 
-        function initFixedMarker() {
+        function isInfoWindowOpen(infoWindow){
+            var tmpMap = infoWindow.getMap();
+            return (tmpMap !== null && typeof tmpMap !== undefined);
+        }
+
+        function refreshInfoWindowContent(index) {
+            infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[index][0] + '</strong>'
+                + '<br>Nhiệt Độ:&nbsp;' + stationLocation[index][3] + '°C'
+                + '<br>Độ Ẩm:&emsp;' + stationLocation[index][4] + '%'
+                + '<br>Mưa:&emsp;&emsp;' + (stationLocation[index][5] == 1 ? "Đang Mưa" : "Không Mưa")
+                + '<br>Độ Bụi:&emsp;' + stationLocation[index][6] + '&nbsp;µg/m3'
+                + '<br>Cảnh Báo:');
+        }
+
+        function initMarkers() {
             for (var i = 0; i < stationLocation.length; i++) {
-                fixedMarker = new google.maps.Marker({
+                markers = new google.maps.Marker({
                     position: new google.maps.LatLng(stationLocation[i][1], stationLocation[i][2]),
                     map: map
                 });
 
-                google.maps.event.addListener(fixedMarker, 'click', (function(fixedMarker, i) {
+                google.maps.event.addListener(markers, 'click', (function(markers, i) {
                     return function() {
                         infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[i][0] + '</strong>'
                         + '<br>Nhiệt Độ:&nbsp;' + stationLocation[i][3] + '°C'
                         + '<br>Độ Ẩm:&emsp;' + stationLocation[i][4] + '%'
                         + '<br>Mưa:&emsp;&emsp;' + (stationLocation[i][5] == 1 ? "Đang Mưa" : "Không Mưa")
-                        + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + 'µg/m3'
+                        + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + '&nbsp;µg/m3'
                         + '<br>Cảnh Báo:');
                         document.getElementById('txtStation').value = stationLocation[i][0];
                         document.getElementById('txtLng').value = stationLocation[i][1];
@@ -265,11 +261,11 @@
                         document.getElementById('txtTemp').value = stationLocation[i][3] + '°C';
                         document.getElementById('txtHumi').value = stationLocation[i][4] + '%';
                         document.getElementById('txtRain').value = stationLocation[i][5] == 1 ? "Đang mưa" : "Không mưa";
-                        document.getElementById('txtDust').value = stationLocation[i][6] + 'µg/m3';
-                        infowindow.open(map, fixedMarker);
-                        current = i;
+                        document.getElementById('txtDust').value = stationLocation[i][6] + ' µg/m3';
+                        infowindow.open(map, markers);
+                        currentMarkerIndex = i;
                     }
-                })(fixedMarker, i));
+                })(markers, i));
             }
         }
          
@@ -337,7 +333,6 @@
                            </table>
                         </td>
                      </tr>
-                     <tr style="height: 20px;"></tr>
                      <tr class='control' align='right'>
                         <td class='move_control' colspan='3'>
                            <table border='1' width='100%'>
@@ -363,7 +358,7 @@
                                                 <tr width='100%'>
                                                    <td align='left'>
                                                       <label class="switch">
-                                                         <input type="checkbox" onclick='if(this.checked) startTimerGetLocation(); else clearTimerGetLocation();' checked='true'>
+                                                         <input type="checkbox" onclick='if(this.checked) startTimerGetLocation(); else clearTimerGetLocation();' checked=false>
                                                          <div class="slider"></div>
                                                       </label>
                                                    </td>
@@ -377,7 +372,6 @@
                            </table>
                         </td>
                      </tr>
-                     <tr style="height: 20px;"></tr>
                      <tr>
                         <td class='info-class' colspan='3'>
                            <table border='1' width='100%'>
