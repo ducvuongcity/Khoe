@@ -166,3 +166,44 @@ void DataManager::addHistoryDataRow(QString time, QString lat, QString lng, QStr
     database.close();
 }
 
+QString DataManager::getAlert()
+{
+    QString retVal = "0000";
+    int tempLevel, humiLevel, rainLevel, dustLevel;
+
+    int tempVal = m_temp.toInt();
+    int humiVal = m_humi.toInt();
+    double dustVal = m_dust.toDouble();
+
+    if(tempVal < 16)
+        tempLevel = TEMP_LOW;
+    else if(tempVal > 30)
+        tempLevel = TEMP_HIGH;
+    else
+        tempLevel = TEMP_NORMAL;
+
+    if(humiVal < 60)
+        humiLevel = HUMI_LOW;
+    else if(humiVal > 80)
+        humiLevel = HUMI_HIGH;
+    else
+        humiLevel = HUMI_NORMAL;
+
+    rainLevel = m_rain ? RAIN_RAINING : RAIN_NO_RAIN;
+
+    if(dustVal < 35)
+        dustLevel = DUST_LV1_EXCELLENT;
+    else if(dustVal >= 35 && dustVal < 75)
+        dustLevel = DUST_LV2_AVERAGE;
+    else if(dustVal >= 75 && dustVal < 115)
+        dustLevel = DUST_LV3_LIGHT_POLLUTION;
+    else if(dustVal >= 115 && dustVal < 150)
+        dustLevel = DUST_LV4_MODERATE_POLLUTION;
+    else if(dustVal >= 150 && dustVal < 250)
+        dustLevel = DUST_LV5_HEAVY_POLLUTION;
+    else /*if(dustVal >= 250)*/
+        dustLevel = DUST_LV6_SERIOUS_POLLUTION;
+
+    return QString("%1%2%3%4").arg(tempLevel, humiLevel, rainLevel, dustLevel);
+}
+

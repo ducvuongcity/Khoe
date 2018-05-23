@@ -6,14 +6,14 @@
       <link rel='icon' href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM1SURBVHhe7dxBbtpAGIZh6BlMuABUchJfgIpEYke6qVj0CAlSFvQAlRxL3XWTLCKhHoEFygp2kVpULuAqXsAFKNwhnSR/q6TYY3/N2J5G3yOkjFEW0ZvxYMaIauXsrELZvJKflAFjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjAeJv37c6p9/bjhwkmI6Do1DGxaqfn/YHKX+dIZvZm8vruRxwZiEYC8BYAMYCMBaAsQCMBWAswP94UZqFN/F7XRkneHrBmUWxseqdRb/dkIO/Ga2fS6xCTkPVyPdv1SO5lNLt3f+O7088ecY2ecdS/+GURtvuq52e1+XQHnnG8t7fpp4LiZxB31907AqWWyxVqufK+F812n2reuUTSy1Szy71QPWyZwnLI5Y3ARcpvW7PlvXLfKxW5yB1nVrOhtUgkMc4kmcTOYNDK2aX8Vjex5QLtM3FMGher+RICUfVYDyVgwTugQ2Ty3Qsz9VPq+n48sOjUL+FRynzy3m7V34tw7GOXf26Hl0lXaOHXy82MozVcPdaMiyN2Vj13ZqM4kXRFxltW92sZRTPcfZlVBqzsXZea9er5eanjOL82GinVqW2W/aJaDRWvdaUUbzFOma5+mO+1k+t8ple4F80xgIUGqtZ0606rZr+1aF8RmOt1gsZxWs4OzKKs+/or2bXN7oVrwhmZ1Z4pb+0dN1jGW17zmVHQQyfhmkv/+67pDd53qH+sx76y45iGI41v/6mf5eXsIXgTVK2dKLPj99OlsT4Ah9+mukn19YWaJYNVQvOQcV4rPTJpTTa/Yd7E3eP9G3C6GRkxU0387EybCFgpuORDdNKySOWyjXKsKWXyXI2tOdWbj6xFBO9puOn24Rlyy2WkmULNFF0Elj38YA8Y90Jj4KgOpwt5TCLu33namDLOvVYsV82pvusg2oUu+NsEX4zGyDv0/BFYSwAYwEYC8BYAMYCMBaAsQCMBWAsAGMBGAvAWADGAjAWgLEAjAVgLABjARgLwFgAxgIwFoCxAIwFYCwAYwEYC8BYAMYCMBaAsQCMlVml8gtfh95hA2Zb4QAAAABJRU5ErkJggg=='>
       <style>
          .move_control{
-            width: 45%;
+         width: 45%;
          }
          .td_top1{
-            position: relative;
-            width: 30%;
+         position: relative;
+         width: 30%;
          }
          .td_top2{
-            width: 70%;
+         width: 70%;
          }
          div.container {
          width: 100%;
@@ -56,14 +56,8 @@
          label {
          vertical-align: middle;
          }
-         iframe {
-         background-color: black;
-         position: relative;
-         width: 550px;
-         height: 300px;
-         }
-         input { 
-         text-align: center; 
+         input {
+         text-align: center;
          font-weight:bold;
          }
          #map_canvas {
@@ -120,155 +114,189 @@
       </style>
       <script type='text/javascript' src='http://maps.googleapis.com/maps/api/js?key=AIzaSyBng4haedS3slr78L2a2ouEHSbG-wm0hnk&sensor=false'></script>
       <script type='text/javascript'>
-        var map, infowindow, currentMarkerIndex, delayConnectionText = 0;
-        var xhttpRequest = new XMLHttpRequest();
-        var timer, msgResponse;
+         var map, infowindow, currentMarkerIndex, delayConnectionText = 0;
+         var xhttpRequest = new XMLHttpRequest();
+         var timer, msgResponse;
 
-        var centerLat = 21.0065189;
-        var centerLng = 105.8431605;
-        var zoomVal = 14;
+         var centerLat = 21.0065189;
+         var centerLng = 105.8431605;
+         var zoomVal = 14;
 
-        var m_Lat = 'N/A', m_Lng = 'N/A', m_Temp = 'N/A', m_Humi = 'N/A', m_Rain = 'N/A', m_Dust = 'N/A';
-        var markers;
-        var stationLocation = [
-            ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust],
-            ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82],
-            ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73],
-            ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56],
-            ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56]
-        ];
-         
-        function initMap() {
-            var myOptions = {
-                center: new google.maps.LatLng(centerLat, centerLng),
-                zoom: zoomVal,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                panControl: true
-            };
-            map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-        }
+         var m_Lat = 'N/A', m_Lng = 'N/A', m_Temp = 'N/A', m_Humi = 'N/A', m_Rain = 'N/A', m_Dust = 'N/A', m_Alert = "0000";
+         var markers;
+         var stationLocation = [
+             ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust],
+             ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82],
+             ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73],
+             ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56],
+             ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56]
+         ];
 
-        function getLocation() {
-            xhttpRequest.open('POST', '', true);
-            xhttpRequest.timeout = 2000;
-            xhttpRequest.onreadystatechange = callBack;
-            xhttpRequest.send('update');
-        }
-         
-        function callBack() {
-            if (this.readyState == 4 && this.status == 200) {
-                delayConnectionText = 0;
-                document.getElementById('lblConnectStatus').innerHTML = 'Đã Kết Nối: ';
-                msgResponse = this.responseText;
-                var elements = msgResponse.split(',');
-                m_Lat = elements[1];
-                m_Lng = elements[2];
-                m_Temp = elements[3];
-                m_Humi = elements[4];
-                m_Rain = elements[5];
-                m_Dust = elements[6];
-                stationLocation[0] = ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust];
-                updateStatus();
-             } else {
-                if(delayConnectionText++ == 1) {
-                    document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
-                }
+         function initMap() {
+             var myOptions = {
+                 center: new google.maps.LatLng(centerLat, centerLng),
+                 zoom: zoomVal,
+                 mapTypeId: google.maps.MapTypeId.ROADMAP,
+                 panControl: true
+             };
+             map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+         }
+
+         function getLocation() {
+             xhttpRequest.open('POST', '', true);
+             xhttpRequest.timeout = 2000;
+             xhttpRequest.onreadystatechange = callBack;
+             xhttpRequest.send('update');
+         }
+
+         function callBack() {
+             if (this.readyState == 4 && this.status == 200) {
+                 delayConnectionText = 0;
+                 document.getElementById('lblConnectStatus').innerHTML = 'Đã Kết Nối: ';
+                 msgResponse = this.responseText;
+                 var elements = msgResponse.split(',');
+                 m_Lat = elements[1];
+                 m_Lng = elements[2];
+                 m_Temp = elements[3];
+                 m_Humi = elements[4];
+                 m_Rain = elements[5];
+                 m_Dust = elements[6];
+                 m_Alert = elements[7];
+                 stationLocation[0] = ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust];
+                 updateStatus();
+              } else {
+                 if(delayConnectionText++ == 1) {
+                     document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
+                 }
+              }
+         }
+
+         function updateStatus() {
+             if(currentMarkerIndex == 0) {
+                 if(m_Temp != "-1") document.getElementById('txtTemp').value = m_Temp + '°C';
+                 else document.getElementById('txtTemp').value = "N/A";
+
+                 if(m_Humi != "-1") document.getElementById('txtHumi').value = m_Humi + '%';
+                 else document.getElementById('txtGpsDate').value = "N/A";
+
+                 if(m_Lng != "-1") document.getElementById('txtLng').value = m_Lng;
+                 else document.getElementById('txtLng').value = "N/A";
+
+                 if(m_Lat != "-1") document.getElementById('txtLat').value = m_Lat;
+                 else document.getElementById('txtLat').value = "N/A";
+
+                 document.getElementById('txtRain').value = m_Rain == 1 ? "Đang mưa" : "Không mưa";
+
+                 if(m_Dust != "-1") document.getElementById('txtDust').value = m_Dust + ' µg/m3';
+                 else document.getElementById('txtDust').value = "N/A";
+
+                 document.getElementById('lblAlert').innerHTML = getAlert(m_Alert);
+
+                 if(isInfoWindowOpen(infowindow)) {
+                     refreshInfoWindowContent(0);
+                 }
              }
-        }
+          }
 
-        function updateStatus() {
-            if(currentMarkerIndex == 0) {
-                if(m_Temp != "-1") document.getElementById('txtTemp').value = m_Temp + '°C';
-                else document.getElementById('txtTemp').value = "N/A";
+          function startTimerGetLocation() {
+              timer = setInterval(getLocation, 2000);
+          }
 
-                if(m_Humi != "-1") document.getElementById('txtHumi').value = m_Humi + '%';
-                else document.getElementById('txtGpsDate').value = "N/A";
+          function clearTimerGetLocation() {
+              clearInterval(timer);
+          }
 
-                if(m_Lng != "-1") document.getElementById('txtLng').value = m_Lng;
-                else document.getElementById('txtLng').value = "N/A";
+          function initialize() {
+              infowindow = new google.maps.InfoWindow();
+              initMarkers();
+              dumyCode();
+          }
 
-                if(m_Lat != "-1") document.getElementById('txtLat').value = m_Lat;
-                else document.getElementById('txtLat').value = "N/A";
+          function dumyCode() {
+             document.getElementById('txtStation').value = "N/A";
+             document.getElementById('txtLng').value = "N/A";
+             document.getElementById('txtLat').value = "N/A";
+             document.getElementById('txtTemp').value = "N/A";
+             document.getElementById('txtHumi').value = "N/A";
+             document.getElementById('txtRain').value = 'N/A';
+             document.getElementById('txtDust').value = 'N/A';
+             document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
+          }
 
-                document.getElementById('txtRain').value = m_Rain == 1 ? "Đang mưa" : "Không mưa";
+         function isInfoWindowOpen(infoWindow){
+             var tmpMap = infoWindow.getMap();
+             return (tmpMap !== null && typeof tmpMap !== undefined);
+         }
 
-                if(m_Dust != "-1") document.getElementById('txtDust').value = m_Dust + ' µg/m3';
-                else document.getElementById('txtDust').value = "N/A";
+         function refreshInfoWindowContent(index) {
+             infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[index][0] + '</strong>'
+                 + '<br>Nhiệt Độ:&nbsp;' + stationLocation[index][3] + '°C'
+                 + '<br>Độ Ẩm:&emsp;' + stationLocation[index][4] + '%'
+                 + '<br>Mưa:&emsp;&emsp;' + (stationLocation[index][5] == 1 ? "Đang Mưa" : "Không Mưa")
+                 + '<br>Độ Bụi:&emsp;' + stationLocation[index][6] + '&nbsp;µg/m3'
+                 + '<br>Cảnh Báo:');
+         }
 
-                if(isInfoWindowOpen(infowindow)) {
-                    refreshInfoWindowContent(0);
-                }
+         function initMarkers() {
+             for (var i = 0; i < stationLocation.length; i++) {
+                 markers = new google.maps.Marker({
+                     position: new google.maps.LatLng(stationLocation[i][1], stationLocation[i][2]),
+                     map: map
+                 });
+
+                 google.maps.event.addListener(markers, 'click', (function(markers, i) {
+                     return function() {
+                         infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[i][0] + '</strong>'
+                         + '<br>Nhiệt Độ:&nbsp;' + stationLocation[i][3] + '°C'
+                         + '<br>Độ Ẩm:&emsp;' + stationLocation[i][4] + '%'
+                         + '<br>Mưa:&emsp;&emsp;' + (stationLocation[i][5] == 1 ? "Đang Mưa" : "Không Mưa")
+                         + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + '&nbsp;µg/m3'
+                         + '<br>Cảnh Báo:');
+                         document.getElementById('txtStation').value = stationLocation[i][0];
+                         document.getElementById('txtLng').value = stationLocation[i][1];
+                         document.getElementById('txtLat').value = stationLocation[i][2];
+                         document.getElementById('txtTemp').value = stationLocation[i][3] + '°C';
+                         document.getElementById('txtHumi').value = stationLocation[i][4] + '%';
+                         document.getElementById('txtRain').value = stationLocation[i][5] == 1 ? "Đang mưa" : "Không mưa";
+                         document.getElementById('txtDust').value = stationLocation[i][6] + ' µg/m3';
+                         infowindow.open(map, markers);
+                         currentMarkerIndex = i;
+                     }
+                 })(markers, i));
+             }
+         }
+
+        function getAlert(alertCode) {
+            var alertMessage = '';
+
+            if(alertCode[0] == '1') {
+                alertMessage += 'Nhiệt độ thấp<br>';
+            } else if(alertCode[0] == '2'){
+                alertMessage += 'Nhiệt độ cao<br>';
             }
-         }
-         
-         function startTimerGetLocation() {
-             timer = setInterval(getLocation, 2000);
-         }
-         
-         function clearTimerGetLocation() {
-             clearInterval(timer);
-         }
-         
-         function initialize() {
-             infowindow = new google.maps.InfoWindow();
-             initMarkers();
-             dumyCode();
-         }
-         
-         function dumyCode() {
-            document.getElementById('txtStation').value = "N/A";
-            document.getElementById('txtLng').value = "N/A";
-            document.getElementById('txtLat').value = "N/A";
-            document.getElementById('txtTemp').value = "N/A";
-            document.getElementById('txtHumi').value = "N/A";
-            document.getElementById('txtRain').value = 'N/A';
-            document.getElementById('txtDust').value = 'N/A';
-            document.getElementById('lblConnectStatus').innerHTML = 'Chưa Kết Nối';
-         }
 
-        function isInfoWindowOpen(infoWindow){
-            var tmpMap = infoWindow.getMap();
-            return (tmpMap !== null && typeof tmpMap !== undefined);
-        }
-
-        function refreshInfoWindowContent(index) {
-            infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[index][0] + '</strong>'
-                + '<br>Nhiệt Độ:&nbsp;' + stationLocation[index][3] + '°C'
-                + '<br>Độ Ẩm:&emsp;' + stationLocation[index][4] + '%'
-                + '<br>Mưa:&emsp;&emsp;' + (stationLocation[index][5] == 1 ? "Đang Mưa" : "Không Mưa")
-                + '<br>Độ Bụi:&emsp;' + stationLocation[index][6] + '&nbsp;µg/m3'
-                + '<br>Cảnh Báo:');
-        }
-
-        function initMarkers() {
-            for (var i = 0; i < stationLocation.length; i++) {
-                markers = new google.maps.Marker({
-                    position: new google.maps.LatLng(stationLocation[i][1], stationLocation[i][2]),
-                    map: map
-                });
-
-                google.maps.event.addListener(markers, 'click', (function(markers, i) {
-                    return function() {
-                        infowindow.setContent('<strong>Điểm Giám Sát: ' + stationLocation[i][0] + '</strong>'
-                        + '<br>Nhiệt Độ:&nbsp;' + stationLocation[i][3] + '°C'
-                        + '<br>Độ Ẩm:&emsp;' + stationLocation[i][4] + '%'
-                        + '<br>Mưa:&emsp;&emsp;' + (stationLocation[i][5] == 1 ? "Đang Mưa" : "Không Mưa")
-                        + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + '&nbsp;µg/m3'
-                        + '<br>Cảnh Báo:');
-                        document.getElementById('txtStation').value = stationLocation[i][0];
-                        document.getElementById('txtLng').value = stationLocation[i][1];
-                        document.getElementById('txtLat').value = stationLocation[i][2];
-                        document.getElementById('txtTemp').value = stationLocation[i][3] + '°C';
-                        document.getElementById('txtHumi').value = stationLocation[i][4] + '%';
-                        document.getElementById('txtRain').value = stationLocation[i][5] == 1 ? "Đang mưa" : "Không mưa";
-                        document.getElementById('txtDust').value = stationLocation[i][6] + ' µg/m3';
-                        infowindow.open(map, markers);
-                        currentMarkerIndex = i;
-                    }
-                })(markers, i));
+            if(alertCode[1] == '1') {
+                alertMessage += 'Độ ẩm không khí thấp<br>';
+            } else if(alertCode[1] == '2'){
+                alertMessage += 'Độ ẩm không khí cao<br>';
             }
+
+            if(alertCode[3] == '1') {
+                alertMessage += 'Độ bụi thấp, không khí sạch';
+            } else if(alertCode[3] == '2'){
+                alertMessage += 'Độ bụi trung bình';
+            } else if(alertCode[3] == '3'){
+                alertMessage += 'Độ bụi tương đối cao, không khí ô nhiễm nhẹ';
+            } else if(alertCode[3] == '4'){
+                alertMessage += 'Độ bụi cao, không khí ô nhiễm trung bình';
+            } else if(alertCode[3] == '5'){
+                alertMessage += 'Độ bụi rất cao, không khí ô nhiễm nặng';
+            } else if(alertCode[3] == '6'){
+                alertMessage += 'Độ bụi cực cao, không khí ô nhiễm nghiêm trọng';
+            }
+            return alertMessage;
         }
-         
+
       </script>
    </head>
    <title>Hệ Thống Giám Sát Môi Trường</title>
@@ -290,12 +318,51 @@
             <tr class='tr_top' width='100%'>
                <td class='td_top1' valign='top'>
                   <table class='video_control' width='100%' >
+                     <tr class='control' align='right'>
+                        <td class='move_control' colspan='3'>
+                           <table width='100%'>
+                              <tr width='100%'>
+                                 <td width='60%' valign='top'>
+                                    <table width='100%' cellpadding='5'>
+                                       <tr width='100%'>
+                                          <th colspan='2'>Trạng Thái</th>
+                                       </tr>
+                                       <tr>
+                                          <td width='60%'>
+                                             <strong><font size="3">Trạng Thái Kết Nối:</font></strong>
+                                          </td>
+                                          <td>
+                                             <label id="lblConnectStatus"></label>
+                                          </td>
+                                       </tr>
+                                       <td>
+                                          <strong><font size="3">Cập Nhật Thông Tin:</font></strong>
+                                       </td>
+                                       <td>
+                                          <table width = '100%'>
+                                             <tr width='100%'>
+                                                <td align='left'>
+                                                   <label class="switch">
+                                                      <input type="checkbox" onclick='if(this.checked) startTimerGetLocation(); else clearTimerGetLocation();' checked=false>
+                                                      <div class="slider"></div>
+                                                   </label>
+                                                </td>
+                                             </tr>
+                                          </table>
+                                       </td>
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
                      <tr class='video'>
                         <td width='100%' valign='top'>
-                           <table style="width: 100%; ">
+                           <table style="width: 100%;">
                               <tr>
                                  <td align='center' rowspan='2'>
-                                    <table class='tblGPS' cellpadding='2' bgcolor='#FFFAFA' border='1'>
+                                    <table class='tblGPS' cellpadding='5' bgcolor='#FFFAFA' border='1'>
                                        <tr>
                                           <th colspan='2' align='center'>Thông Tin</th>
                                        </tr>
@@ -333,6 +400,8 @@
                            </table>
                         </td>
                      </tr>
+<<<<<<< HEAD
+=======
                      <tr class='control' align='right'>
                         <td class='move_control' colspan='3'>
                            <table border='1' width='100%'>
@@ -372,20 +441,15 @@
                            </table>
                         </td>
                      </tr>
+>>>>>>> 85d44b6cd1a8477226d1018b2826d07460b6678c
                      <tr>
-                        <td class='info-class' colspan='3'>
-                           <table border='1' width='100%'>
+                        <td width='100%' height='150px' valign='top'>
+                           <table width='100%' border='1'>
                               <tr width='100%'>
-                                 <th>Họ và tên:</th>
-                                 <td>Nguyễn Văn Khỏe</td>
+                                 <th colspan='2'>Cảnh Báo</th>
                               </tr>
                               <tr width='100%'>
-                                 <th>Ngày sinh:</th>
-                                 <td>4/5/1994</td>
-                              </tr>
-                              <tr width='100%'>
-                                 <th>Mã số SV:</th>
-                                 <td>20121926</td>
+                                <td align="center"><label id="lblAlert"></label></td>
                               </tr>
                            </table>
                         </td>

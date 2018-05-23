@@ -9,9 +9,9 @@
 #include <QSqlError>
 #include <QFile>
 
-#define DB_PATH "air.db"
-
 #include "common.h"
+
+#define DB_PATH "air.db"
 
 class DataManager : public QObject
 {
@@ -40,16 +40,18 @@ public:
     void setRain(bool rain);
 
     bool createDatabase();
-        void initDb();
-        bool isDbExists();
-        void createHistoryDataTable();
-        void addHistoryDataRow(QString time,
-                               QString lat,
-                               QString lng,
-                               QString temp,
-                               QString humi,
-                               bool rain,
-                               QString dust);
+    void initDb();
+    bool isDbExists();
+    void createHistoryDataTable();
+    void addHistoryDataRow(QString time,
+                           QString lat,
+                           QString lng,
+                           QString temp,
+                           QString humi,
+                           bool rain,
+                           QString dust);
+
+    QString getAlert();
 
 private:
     static DataManager* m_instance;

@@ -24,5 +24,31 @@
 
 #define PH_DB               "E://Air/air.db"
 
+enum AlertTemperature{
+    TEMP_NORMAL,
+    TEMP_LOW,
+    TEMP_HIGH
+};
+
+enum AlertHumidity{
+    HUMI_NORMAL,
+    HUMI_LOW,
+    HUMI_HIGH
+};
+
+enum AlertRain {
+    RAIN_RAINING,
+    RAIN_NO_RAIN
+};
+
+enum AlertDust {
+    DUST_LV1_EXCELLENT,
+    DUST_LV2_AVERAGE,
+    DUST_LV3_LIGHT_POLLUTION,
+    DUST_LV4_MODERATE_POLLUTION,
+    DUST_LV5_HEAVY_POLLUTION,
+    DUST_LV6_SERIOUS_POLLUTION
+};
+
 #endif // PARAMETER
 

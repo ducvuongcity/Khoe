@@ -20,20 +20,24 @@ void ServerHandler::readClientMessage()
 {
     QString revMessage = m_client->readAll();
     DLG_THR << "Client send: " << revMessage;
-    QRegExp rx("(\\[|\\]|\\,)");
-    QStringList elements = revMessage.split(rx);
-    MODEL->setLat(elements.at(2));
-    MODEL->setLng(elements.at(5));
-    MODEL->setTemp(elements.at(8));
-    MODEL->setHumi(elements.at(11));
-    MODEL->setRain(elements.at(14).toInt() == 0);
-    MODEL->setDust(elements.at(17));
+    if(revMessage.startsWith("$[")){
+        QRegExp rx("(\\[|\\]|\\,)");
+        QStringList elements = revMessage.split(rx);
+        if(elements.size() > 17) {
+            MODEL->setLat(elements.at(2));
+            MODEL->setLng(elements.at(5));
+            MODEL->setTemp(elements.at(8));
+            MODEL->setHumi(elements.at(11));
+            MODEL->setRain(elements.at(14).toInt() == 0);
+            MODEL->setDust(elements.at(17));
+        }
 
-    MODEL->addHistoryDataRow(QDateTime::currentDateTime().toString("HH:mm:ss dd-MM-yyyy")
-                             , MODEL->lat()
-                             , MODEL->lng()
-                             , MODEL->temp()
-                             , MODEL->humi()
-                             , MODEL->rain()
-                             , MODEL->dust());
+        MODEL->addHistoryDataRow(QDateTime::currentDateTime().toString("HH:mm:ss dd-MM-yyyy")
+                                 , MODEL->lat()
+                                 , MODEL->lng()
+                                 , MODEL->temp()
+                                 , MODEL->humi()
+                                 , MODEL->rain()
+                                 , MODEL->dust());
+    }
 }
