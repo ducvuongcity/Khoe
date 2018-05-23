@@ -125,11 +125,11 @@
          var m_Lat = 'N/A', m_Lng = 'N/A', m_Temp = 'N/A', m_Humi = 'N/A', m_Rain = 'N/A', m_Dust = 'N/A', m_Alert = "0000";
          var markers;
          var stationLocation = [
-             ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust],
-             ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82],
-             ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73],
-             ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56],
-             ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56]
+             ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust, m_Alert],
+             ['Ngã Tư Sở', 21.003106, 105.8194798, 34, 76, 0, 82, '2002'],
+             ['Lò Đúc', 21.009982, 105.8503085, 33, 81, 1, 73, '2211'],
+             ['Nguyễn An Ninh', 20.990818, 105.844023, 33, 83, 0, 56, '2201'],
+             ['Khâm Thiên', 21.019212, 105.830993, 33, 83, 0, 56, '2201']
          ];
 
          function initMap() {
@@ -162,7 +162,7 @@
                  m_Rain = elements[5];
                  m_Dust = elements[6];
                  m_Alert = elements[7];
-                 stationLocation[0] = ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust];
+                 stationLocation[0] = ['Bách Khoa', centerLat, centerLng, m_Temp, m_Humi, m_Rain, m_Dust, m_Alert];
                  updateStatus();
               } else {
                  if(delayConnectionText++ == 1) {
@@ -233,8 +233,7 @@
                  + '<br>Nhiệt Độ:&nbsp;' + stationLocation[index][3] + '°C'
                  + '<br>Độ Ẩm:&emsp;' + stationLocation[index][4] + '%'
                  + '<br>Mưa:&emsp;&emsp;' + (stationLocation[index][5] == 1 ? "Đang Mưa" : "Không Mưa")
-                 + '<br>Độ Bụi:&emsp;' + stationLocation[index][6] + '&nbsp;µg/m3'
-                 + '<br>Cảnh Báo:');
+                 + '<br>Độ Bụi:&emsp;' + stationLocation[index][6] + '&nbsp;µg/m3');
          }
 
          function initMarkers() {
@@ -250,8 +249,8 @@
                          + '<br>Nhiệt Độ:&nbsp;' + stationLocation[i][3] + '°C'
                          + '<br>Độ Ẩm:&emsp;' + stationLocation[i][4] + '%'
                          + '<br>Mưa:&emsp;&emsp;' + (stationLocation[i][5] == 1 ? "Đang Mưa" : "Không Mưa")
-                         + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + '&nbsp;µg/m3'
-                         + '<br>Cảnh Báo:');
+                         + '<br>Độ Bụi:&emsp;' + stationLocation[i][6] + '&nbsp;µg/m3');
+
                          document.getElementById('txtStation').value = stationLocation[i][0];
                          document.getElementById('txtLng').value = stationLocation[i][1];
                          document.getElementById('txtLat').value = stationLocation[i][2];
@@ -259,6 +258,7 @@
                          document.getElementById('txtHumi').value = stationLocation[i][4] + '%';
                          document.getElementById('txtRain').value = stationLocation[i][5] == 1 ? "Đang mưa" : "Không mưa";
                          document.getElementById('txtDust').value = stationLocation[i][6] + ' µg/m3';
+                         document.getElementById('lblAlert').innerHTML = getAlert(stationLocation[i][7]);
                          infowindow.open(map, markers);
                          currentMarkerIndex = i;
                      }
@@ -400,48 +400,6 @@
                            </table>
                         </td>
                      </tr>
-<<<<<<< HEAD
-=======
-                     <tr class='control' align='right'>
-                        <td class='move_control' colspan='3'>
-                           <table border='1' width='100%'>
-                              <tr width='100%'>
-                                 <td width='60%' valign='top'>
-                                    <table width='100%' cellpadding='5'>
-                                       <tr width='100%'>
-                                          <th colspan='2'>Trạng Thái</th>
-                                       </tr>
-                                       <tr>
-                                          <td width='60%'>
-                                             <strong><font size="3">Trạng Thái Kết Nối:</font></strong>
-                                          </td>
-                                          <td>
-                                             <label id="lblConnectStatus"></label>
-                                          </td>
-                                       </tr>
-                                          <td>
-                                             <strong><font size="3">Cập Nhật Thông Tin:</font></strong>
-                                          </td>
-                                          <td>
-                                             <table width = '100%'>
-                                                <tr width='100%'>
-                                                   <td align='left'>
-                                                      <label class="switch">
-                                                         <input type="checkbox" onclick='if(this.checked) startTimerGetLocation(); else clearTimerGetLocation();' checked='0'/>
-                                                         <div class="slider"></div>
-                                                      </label>
-                                                   </td>
-                                                </tr>
-                                             </table>
-                                          </td>
-                                       </tr>
-                                    </table>
-                                 </td>
-                              </tr>
-                           </table>
-                        </td>
-                     </tr>
->>>>>>> 85d44b6cd1a8477226d1018b2826d07460b6678c
                      <tr>
                         <td width='100%' height='150px' valign='top'>
                            <table width='100%' border='1'>

@@ -37,8 +37,8 @@ enum AlertHumidity{
 };
 
 enum AlertRain {
-    RAIN_RAINING,
-    RAIN_NO_RAIN
+    RAIN_NO_RAIN,
+    RAIN_RAINING
 };
 
 enum AlertDust {
